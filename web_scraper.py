@@ -11,16 +11,19 @@ def _prompt_search():
     return tweet_generator
 
 def _print_tweets(tweet_generator):
-    i = 0
+    i = int(input("Tweets to print: "))
+    print(f"You are printing {i} tweets\n")
+    new_line = '\n'
     for i,tweet in enumerate(tweet_generator):
         if (tweet.lang == 'en'):
-            print(tweet.vibe, tweet.date)
-            i+=1
-        if (i > 9):
+            print(f"{tweet.date} {tweet.rawContent} {new_line}")
+            i-=1
+        if (i < 1):
             break
 
-def _create_tweet_list(n,tweet_generator):
+def _create_tweet_list(tweet_generator):
     tweet_list = []
+    n = int(input("Tweets to store: "))
     for i,tweet in enumerate(tweet_generator):
         if (tweet.lang == 'en'):
             tweet_list.append([tweet.date, tweet.rawContent])
@@ -34,6 +37,6 @@ if __name__ == "__main__":
     tweet_generator = _prompt_search()
     print(sys.getsizeof(tweet_generator))
     _print_tweets(tweet_generator)
-    tweet_list = _create_tweet_list(int(input("Tweets to store: ")),tweet_generator)
+    tweet_list = _create_tweet_list(tweet_generator)
     sys.getsizeof(tweet_list)
 
