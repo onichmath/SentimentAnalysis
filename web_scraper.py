@@ -7,10 +7,11 @@ import sys
 # TODO: start and end times for scraping
 def _prompt_search():
     search_phrase = input("Phrase to search: ")
-    tweet_generator = sn.TwitterSearchScraper(search_phrase).get_items()
+    tweet_generator = sn.TwitterSearchScraper(search_phrase+" since 2023-03-12").get_items()
     return tweet_generator
 
 def _print_tweets(tweet_generator):
+    print(sys.getsizeof(tweet_generator))
     i = int(input("Tweets to print: "))
     print(f"You are printing {i} tweets\n")
     new_line = '\n'
@@ -36,7 +37,10 @@ def _create_tweet_list(tweet_generator):
 if __name__ == "__main__":
     tweet_generator = _prompt_search()
     print(sys.getsizeof(tweet_generator))
-    _print_tweets(tweet_generator)
-    tweet_list = _create_tweet_list(tweet_generator)
-    sys.getsizeof(tweet_list)
-
+    if input("Print(y/n)?: ") == 'y':
+        _print_tweets(tweet_generator)
+    if input("Store(y/n)?: ") == 'y':
+        tweet_list = _create_tweet_list(tweet_generator)
+        tweet_dataframe = pd.DataFrame(tweet_list)
+        # TODO: relative filepath
+        tweet_dataframe.to_excel("/home/matthewo/Documents/Projects/SentimentAnalysis/res/tweet.xlsx")
