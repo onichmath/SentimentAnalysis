@@ -11,7 +11,6 @@ def _prompt_search():
     return tweet_generator
 
 def _print_tweets(tweet_generator):
-    print(sys.getsizeof(tweet_generator))
     i = int(input("Tweets to print: "))
     print(f"You are printing {i} tweets\n")
     new_line = '\n'
