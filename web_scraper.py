@@ -21,27 +21,26 @@ def _prompt_search():
     return tweet_generator
 
 def _print_tweets(tweet_generator):
-    i = int(input("Tweets to print: "))
-    print(f"You are printing {i} tweets\n")
+    n = int(input("Tweets to print: "))
+    print(f"You are printing {n} tweets\n")
     new_line = '\n'
     for i,tweet in enumerate(tweet_generator):
         if (tweet.lang == 'en'):
-            print(f"{tweet.date} {tweet.renderedContent} {new_line}")
-            i-=1
-        if (i < 1):
+            print(f"{tweet.renderedContent} {new_line}")
+        if (i >= n):
             break
 
+
+# TODO: Datetimezone to datetime in createtweet method
 def _create_tweet_list(tweet_generator):
     tweet_list = []
     n = int(input("Tweets to store: "))
     for i,tweet in enumerate(tweet_generator):
         if (tweet.lang == 'en'):
-            tweet_list.append([tweet.rawContent])
-            n -= 1
-        if n < 1:
+            tweet_list.append([tweet.renderedContent])
+        if i >= n:
             break
     return tweet_list
-
 
 if __name__ == "__main__":
     tweet_generator = _prompt_search()
@@ -50,8 +49,9 @@ if __name__ == "__main__":
         _print_tweets(tweet_generator)
     if input("Store(y/n)?: ") == 'y':
         tweet_list = _create_tweet_list(tweet_generator)
-        tweet_dataframe = pd.DataFrame(tweet_list)
+        tweet_dataframe = pd.DataFrame(data=tweet_list,columns=['Content'])
         # Convertine date time to date for excel compatibility
+        #tweet_dataframe['Date'].dt.tz_convert(None)
         #tweet_dataframe['date'] = tweet_dataframe['date'].apply(lambda x: pd.to_datetime(x).date())
         # TODO: relative filepath
         tweet_dataframe.to_excel("/home/matthewo/Documents/Projects/SentimentAnalysis/res/tweet.xlsx")
