@@ -6,17 +6,19 @@ import datetime
 
 # TODO: numpy list
 # TODO: start and end times for scraping
+# TODO: improve space complexity
 def _prompt_search():
-    phrase = input("Phrase to search: ")
+    phrase = str(input("Phrase to search: "))
     start_year = input("Start year: ")
     start_month = input("Start month: ")
     start_day = input("Start day: ")
     start_date = f"{start_year}-{start_month}-{start_day}"
     end_date = f"{datetime.datetime.now():%Y-%m-%d}"
     search_phrase = f"{phrase} since:{start_date} until:{end_date}"
-    print(search_phrase)
-    #tweet_generator = sn.TwitterSearchScraper(search_phrase).get_items()
-    #return tweet_generator
+    print(f"Your search phrase is \'{search_phrase}\'")
+    # TODO: Fix giant error creating generator
+    tweet_generator = sn.TwitterSearchScraper(search_phrase).get_items()
+    return tweet_generator
 
 def _print_tweets(tweet_generator):
     i = int(input("Tweets to print: "))
@@ -34,7 +36,7 @@ def _create_tweet_list(tweet_generator):
     n = int(input("Tweets to store: "))
     for i,tweet in enumerate(tweet_generator):
         if (tweet.lang == 'en'):
-            tweet_list.append([tweet.date, tweet.rawContent])
+            tweet_list.append([tweet.rawContent])
             n -= 1
         if n < 1:
             break
@@ -50,6 +52,6 @@ if __name__ == "__main__":
         tweet_list = _create_tweet_list(tweet_generator)
         tweet_dataframe = pd.DataFrame(tweet_list)
         # Convertine date time to date for excel compatibility
-        tweet_dataframe['date'] = tweet_dataframe['date'].apply(lambda x: pd.to_datetime(x).date())
+        #tweet_dataframe['date'] = tweet_dataframe['date'].apply(lambda x: pd.to_datetime(x).date())
         # TODO: relative filepath
         tweet_dataframe.to_excel("/home/matthewo/Documents/Projects/SentimentAnalysis/res/tweet.xlsx")
