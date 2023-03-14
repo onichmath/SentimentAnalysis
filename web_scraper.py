@@ -3,21 +3,21 @@ import snscrape.modules.twitter as sn
 import pandas as pd
 import sys
 import datetime
+import pickle
 
+#TODO: deserialize generator to store generator object in file
 # TODO: numpy list
 # TODO: start and end times for scraping
 # TODO: improve space complexity
+# TODO: Store generator instead of dataframe
 def _prompt_search():
     phrase = str(input("Phrase to search: "))
-    start_year = input("Start year: ")
-    start_month = input("Start month: ")
-    start_day = input("Start day: ")
-    start_date = f"{start_year}-{start_month}-{start_day}"
+    start_date = input("Start year: ") +'-'+ input("Start month: ") +'-'+ input("Start day: ")
     end_date = f"{datetime.datetime.now():%Y-%m-%d}"
     search_phrase = f"{phrase} since:{start_date} until:{end_date}"
     print(f"Your search phrase is \'{search_phrase}\'")
     # TODO: Fix giant error creating generator
-    tweet_generator = sn.TwitterSearchScraper(search_phrase).get_items()
+    tweet_generator = sn.TwitterSearchScraper(search_phrase).get_items() 
     return tweet_generator
 
 def _print_tweets(tweet_generator):
@@ -47,7 +47,7 @@ if __name__ == "__main__":
     #print(sys.getsizeof(tweet_generator))
     if input("Print(y/n)?: ") == 'y':
         _print_tweets(tweet_generator)
-    if input("Store(y/n)?: ") == 'y':
+    if input("Store as excel(y/n)?: ") == 'y':
         tweet_list = _create_tweet_list(tweet_generator)
         tweet_dataframe = pd.DataFrame(data=tweet_list,columns=['Content'])
         # Convertine date time to date for excel compatibility
