@@ -3,12 +3,24 @@ import snscrape.modules.twitter as sn
 import pandas as pd
 import datetime
 import time
-import numpy as np
 # Before numpy: 55682971337
 # After:        53477174548
 # TODO: numpy list
 # TODO: improve space complexity
 # TODO: Store generator instead of dataframe
+def main():
+    search_phrase = _search_string()
+    tweet_generator = _create_generator(search_phrase)
+    if input("Print(y/n)?: ") == 'y':
+        _print_tweets(tweet_generator)
+    if input("Store as excel(y/n)?: ") == 'y':
+        store_count = int(input("Tweets to store: "))
+        start = time.perf_counter_ns()
+        tweet_dataframe = _create_tweet_dataframe(tweet_generator,store_count)
+        end = time.perf_counter_ns()
+        print("Time to create dataframe: ",end - start)
+        tweet_dataframe.to_excel(f"./rsc/{search_phrase}x{store_count}.xlsx") 
+
 def _search_string():
     phrase = str(input("Phrase to search: "))
     start_date = input("Start year: ") +'-'+ input("Start month: ") +'-'+ input("Start day: ")
@@ -52,15 +64,4 @@ def _create_tweet_dataframe(tweet_generator,count):
 
 # TODO: Improve space complexity
 if __name__ == "__main__":
-    search_phrase = _search_string()
-    tweet_generator = _create_generator(search_phrase)
-    if input("Print(y/n)?: ") == 'y':
-        _print_tweets(tweet_generator)
-    if input("Store as excel(y/n)?: ") == 'y':
-        store_count = int(input("Tweets to store: "))
-        start = time.perf_counter_ns()
-        tweet_dataframe = _create_tweet_dataframe(tweet_generator,store_count)
-        end = time.perf_counter_ns()
-        print("Time to create dataframe: ",end - start)
-        tweet_dataframe.to_excel(f"./rsc/{search_phrase}x{store_count}.xlsx")
-        
+    main()
