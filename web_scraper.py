@@ -15,7 +15,7 @@ def _search_string():
     print(f"Your search phrase is \'{search_phrase}\'")
     return search_phrase
 
-def _prompt_search(search_phrase):
+def _create_generator(search_phrase):
     tweet_generator = sn.TwitterSearchScraper(search_phrase).get_items() 
     return tweet_generator
 
@@ -30,22 +30,22 @@ def _print_tweets(tweet_generator):
             break
 
 # TODO: Append date with scrubbed timezone
-def _create_tweet_list(tweet_generator):
+def _create_tweet_list(tweet_generator, count):
     tweet_list = []
-    n = int(input("Tweets to store: "))
     for i,tweet in enumerate(tweet_generator):
         if (tweet.lang == 'en'):
             tweet_list.append([tweet.renderedContent])
-        if i >= n:
+        if i >= count:
             break
     return tweet_list
 
 if __name__ == "__main__":
     search_phrase = _search_string()
-    tweet_generator = _prompt_search(search_phrase)
+    tweet_generator = _create_generator(search_phrase)
     if input("Print(y/n)?: ") == 'y':
         _print_tweets(tweet_generator)
-    if input("Store as excel(y/n)?: ") == 'y': 
-        tweet_list = _create_tweet_list(tweet_generator)
+    if input("Store as excel(y/n)?: ") == 'y':
+        store_count = int(input("Tweets to store: "))
+        tweet_list = _create_tweet_list(tweet_generator,store_count)
         tweet_dataframe = pd.DataFrame(data=tweet_list,columns=['Content'])
-        tweet_dataframe.to_excel(f"./rsc/{search_phrase}.xlsx")
+        tweet_dataframe.to_excel(f"./rsc/{search_phrase}{store_count}.xlsx")
