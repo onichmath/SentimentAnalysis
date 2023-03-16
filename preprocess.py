@@ -1,7 +1,6 @@
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
-from nltk.tokenize import TweetTokenizer
-#from spellchecker import SpellCheck
+#import SpellCheck
 
 class Preproccessor:
     def __init__(self):
