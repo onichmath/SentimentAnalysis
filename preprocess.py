@@ -18,13 +18,19 @@ class Preproccessor:
     def _rm_whitespace(self,tweet_content:str):
         pass
 
-    def _spell_check(self,tweet_tokens:list[str]):
-        for word in tweet_tokens:
+    def _spell_check(self,tweet_content):
+        for word in tweet_content:
             self._spell_checker.correction(word)
-        return tweet_tokens
+        return tweet_content
+    
+    # Specific preprocessing for Vader model, as vader does not require tokenizing/lcasing/etc
+    def vader_preprocess(self,tweet_content:str):
+        tweet_content = re.sub(self._reg_user_website,'',tweet_content)
+        tweet_content = self._spell_check(tweet_content)
+        return tweet_content
 
-    # TODO: REMOVE @USERS
-    def preprocess(self,tweet_content: str):
+        # TODO: REMOVE @USERS
+    def tokenize_preprocess(self,tweet_content: str):
         tweet_content = tweet_content.lower()
         tweet_content = re.sub(self._reg_user_website,'',tweet_content)
         tokens = self._regex_tokenizer.tokenize(tweet_content)

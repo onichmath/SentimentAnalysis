@@ -11,10 +11,13 @@ import web_scraper as ws
 import data_process as dp
 
 def main():
-    search_phrase = ws._search_string()
-    tweet_generator = ws._create_generator(search_phrase)
-    tweet_dataframe = ws._create_tweet_dataframe(tweet_generator,int(input("Tweets to store: ")))
-    print(tweet_dataframe.to_string())
+    # search_phrase = ws._search_string()
+    # tweet_generator = ws._create_generator(search_phrase)
+    # tweet_dataframe = ws._create_tweet_dataframe(tweet_generator,int(input("Tweets to store: ")))
+    # print(tweet_dataframe.to_string())
+    tweet_generator = ws._create_generator(ws.search_string())
+    tweet_dict = ws._create_tweet_dict(tweet_generator,ws.count())
+    print(tweet_dict)
 
 if __name__ == "__main__":
         main()
