@@ -1,10 +1,8 @@
 # TODO: Remove Twitter libraries
-from pandas.core.computation.parsing import tokenize
 import snscrape.modules.twitter as sn
 import pandas as pd
 import datetime
 import time
-import numpy as np
 from preprocess import Preproccessor
 # Before numpy: 55682971337
 # After:        53477174548
@@ -24,12 +22,11 @@ def main():
         store_count = int(input("Tweets to store: "))
         start = time.perf_counter_ns()
         tweet_dataframe = _create_tweet_dataframe(tweet_generator,store_count)
-        #tweet_dict = _create_tokenized_tweet_dict(tweet_generator,store_count)
-        #tweet_array = _create_tweet_nparray(tweet_generator,store_count) 
+        # tweet_dict = _create_tokenized_tweet_dict(tweet_generator,store_count)
         end = time.perf_counter_ns()
-        print("Time to create dataframe: ",end - start)
+        #print("Time to create dataframe: ",end - start)
         print(tweet_dataframe.to_string())
-        #tweet_dataframe.to_excel(f"./rsc/{search_phrase}x{store_count}.xlsx") 
+        tweet_dataframe.to_excel(f"./rsc/{search_phrase}x{store_count}.xlsx") 
 
 def _search_string():
     phrase = str(input("Phrase to search: "))
@@ -51,6 +48,7 @@ def _create_tweet_dataframe(tweet_generator,count):
             #tweet.date = tweet.date.replace(tzinfo=None)
             rendered_token = preprocessor.preprocess(tweet.renderedContent) 
             tweet_list.append([tweet.date, rendered_token])
+            #tweet_list.append([tweet.date, tweet.renderedContent])
         if i >= count:
             break
     tweet_dataframe = pd.DataFrame(data=tweet_list,columns=['Date','Content'])
