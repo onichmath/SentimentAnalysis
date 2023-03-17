@@ -24,9 +24,9 @@ def main():
         tweet_dataframe = _create_tweet_dataframe(tweet_generator,store_count)
         # tweet_dict = _create_tokenized_tweet_dict(tweet_generator,store_count)
         end = time.perf_counter_ns()
-        #print("Time to create dataframe: ",end - start)
+        print("Time to create dataframe: ",end - start)
         print(tweet_dataframe.to_string())
-        tweet_dataframe.to_excel(f"./rsc/{search_phrase}x{store_count}.xlsx") 
+        #tweet_dataframe.to_excel(f"./rsc/{search_phrase}x{store_count}.xlsx") 
 
 def _search_string():
     phrase = str(input("Phrase to search: "))
@@ -52,7 +52,7 @@ def _create_tweet_dataframe(tweet_generator,count):
         if i >= count:
             break
     tweet_dataframe = pd.DataFrame(data=tweet_list,columns=['Date','Content'])
-    # Converting Date-Time-Zone to Date-Time
+    # Converting Date-Time-Zone to Date-Time, Removing empty entries
     tweet_dataframe['Date'] = pd.to_datetime(tweet_dataframe['Date'])
     tweet_dataframe['Date'] = tweet_dataframe['Date'].dt.tz_localize(None)
     tweet_dataframe.dropna(inplace=True)
