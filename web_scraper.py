@@ -55,6 +55,7 @@ def _create_tweet_dataframe(tweet_generator,count):
     # Converting Date-Time-Zone to Date-Time
     tweet_dataframe['Date'] = pd.to_datetime(tweet_dataframe['Date'])
     tweet_dataframe['Date'] = tweet_dataframe['Date'].dt.tz_localize(None)
+    tweet_dataframe.dropna(inplace=True)
     return tweet_dataframe 
 
 def _print_tweets(tweet_generator):
