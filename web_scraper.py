@@ -12,10 +12,13 @@ import datetime
 # TOOD: scrape and tokenize into numpy array
 # TODO: chunking
 class WebScraper:
-    def __init__(self):
+    def __init__(self, tweet_storage_type):
         self.search_string = self._create_search_string()
         self.tweet_generator = self._create_generator(self.search_string)
-
+        if tweet_storage_type = 'df':
+            self.tweet_storage = self._create_tweet_dataframe(self.tweet_generator)
+        else:
+            self.tweet_storage = self._create_tweet_dict(self.tweet_generator)
         
     def _create_search_string(self):
         phrase = str(input("Phrase to search: "))
@@ -26,13 +29,27 @@ class WebScraper:
         #print(f"Your search phrase is \'{search_phrase}\'")
         return search_phrase
 
-    def _count(self):
+    def _prompt_count(self):
         return int(input("Tweets to store: "))
 
     def _create_generator(self,search_phrase):
         return sn.TwitterSearchScraper(search_phrase).get_items() 
 
-    def create_tweet_dataframe(self, tweet_generator,count):
+    # TODO: Append date with scrubbed timezone
+    # TODO: parallel/ improved time
+    # TODO: tokenize and insert raw content into numpy array instead of creating dataframe
+    def _create_tweet_dict(self,tweet_generator):
+        count = self._prompt_count()
+        tweet_dict = {}
+        for i,tweet in enumerate(tweet_generator):
+            if tweet.lang == 'en':
+                tweet_dict[i] = tweet.renderedContent
+            if i>= count:
+                break
+        return tweet_dict 
+    
+    def _create_tweet_dataframe(self, tweet_generator):
+        count = self._prompt_count()
         tweet_list = [] * count
         for i,tweet in enumerate(tweet_generator):
             if tweet.lang == 'en':
@@ -57,18 +74,9 @@ class WebScraper:
                 print(f"{tweet.date}:{tweet.renderedContent} {new_line}")
             if (i >= n):
                 break
-    # TODO: Append date with scrubbed timezone
-    # TODO: parallel/ improved time
-    # TODO: tokenize and insert raw content into numpy array instead of creating dataframe
-    def _create_tweet_dict(self,tweet_generator,count):
-        tweet_dict = {}
-        for i,tweet in enumerate(tweet_generator):
-            if tweet.lang == 'en':
-                tweet_dict[i] = tweet.renderedContent
-            if i>= count:
-                break
-        return tweet_dict 
 
+    def __str__(self) -> str:
+        return f"TODO"
 #def main():
 #    search_phrase = search_string()
 #    tweet_generator = _create_generator(search_phrase)
