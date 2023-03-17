@@ -4,6 +4,7 @@ from nltk.stem import WordNetLemmatizer
 import re
 from spellchecker import SpellChecker
 
+# TODO: Chunking
 class Preproccessor:
     # r'@([A-Za-z0-9_]+)|(\w+\S+\w+)'
     # Spellchecker is default distance 2, may lag on longer words

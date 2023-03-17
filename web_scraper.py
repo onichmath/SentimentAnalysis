@@ -2,24 +2,38 @@
 import snscrape.modules.twitter as sn
 import pandas as pd
 import datetime
+from preprocess import Preproccessor
 # Before numpy: 55682971337
 # After:        53477174548
 # With dict:    51322316259
 # With numpy: 
-# TODO: numpy list
 # TODO: improve space complexity
-# TODO: Store generator instead of dataframe
-# TOOD: scrape and tokenize into numpy array
-# TODO: chunking
 class WebScraper:
-    def __init__(self, tweet_storage_type):
+    def __init__(self, tweets_processed=False):
         self.search_string = self._create_search_string()
         self.tweet_generator = self._create_generator(self.search_string)
-        if tweet_storage_type = 'df':
-            self.tweet_storage = self._create_tweet_dataframe(self.tweet_generator)
+        self.preprocessor = Preproccessor()
+        self.tweet_storage = self._create_tweet_dict(self.tweet_generator)
+        self.tweets_processed = tweets_processed
+
+    # TODO: Custom exceptions for if already processed
+    def tokenize_tweets(self):
+        if self.tweets_processed == False:
+            for tweet in self.tweet_storage.values():
+                self.preprocessor.tokenize_preprocess(tweet)
         else:
-            self.tweet_storage = self._create_tweet_dict(self.tweet_generator)
+            raise
+
+    def vaderize_tweet(self):
+        if self.tweets_processed == False:
+            for tweet in self.tweet_storage.values():
+                self.preprocessor.vader_preprocess(tweet)
+        else:
+            raise
         
+    def get_tweet_storage(self):
+        return self.tweet_storage
+
     def _create_search_string(self):
         phrase = str(input("Phrase to search: "))
         start_date = input("Start year: ") +'-'+ input("Start month: ") +'-'+ input("Start day: ")
@@ -35,9 +49,7 @@ class WebScraper:
     def _create_generator(self,search_phrase):
         return sn.TwitterSearchScraper(search_phrase).get_items() 
 
-    # TODO: Append date with scrubbed timezone
     # TODO: parallel/ improved time
-    # TODO: tokenize and insert raw content into numpy array instead of creating dataframe
     def _create_tweet_dict(self,tweet_generator):
         count = self._prompt_count()
         tweet_dict = {}
@@ -48,22 +60,24 @@ class WebScraper:
                 break
         return tweet_dict 
     
-    def _create_tweet_dataframe(self, tweet_generator):
-        count = self._prompt_count()
-        tweet_list = [] * count
-        for i,tweet in enumerate(tweet_generator):
-            if tweet.lang == 'en':
-                #rendered_token = preprocessor.preprocess(tweet.renderedContent) 
-                #tweet_list.append([tweet.date, rendered_token])
-                tweet_list.append([tweet.date, tweet.renderedContent])
-            if i >= count:
-                break
-        tweet_dataframe = pd.DataFrame(data=tweet_list,columns=['Date','Content'])
-        # Converting Date-Time-Zone to Date-Time, Removing empty entries
-        tweet_dataframe['Date'] = pd.to_datetime(tweet_dataframe['Date'])
-        tweet_dataframe['Date'] = tweet_dataframe['Date'].dt.tz_localize(None)
-        tweet_dataframe.dropna(inplace=True)
-        return tweet_dataframe 
+    # Dataframe was changed out for dict.
+    # Dataframe scraper will be made with different file likely
+    #def _create_tweet_dataframe(self, tweet_generator):
+    #    count = self._prompt_count()
+    #    tweet_list = [] * count
+    #    for i,tweet in enumerate(tweet_generator):
+    #        if tweet.lang == 'en':
+    #            #rendered_token = preprocessor.preprocess(tweet.renderedContent) 
+    #            #tweet_list.append([tweet.date, rendered_token])
+    #            tweet_list.append([tweet.date, tweet.renderedContent])
+    #        if i >= count:
+    #            break
+    #    tweet_dataframe = pd.DataFrame(data=tweet_list,columns=['Date','Content'])
+    #    # Converting Date-Time-Zone to Date-Time, Removing empty entries
+    #    tweet_dataframe['Date'] = pd.to_datetime(tweet_dataframe['Date'])
+    #    tweet_dataframe['Date'] = tweet_dataframe['Date'].dt.tz_localize(None)
+    #    tweet_dataframe.dropna(inplace=True)
+    #    return tweet_dataframe 
 
     def _print_tweets(self, tweet_generator):
         n = int(input("Tweets to print: "))
@@ -76,7 +90,7 @@ class WebScraper:
                 break
 
     def __str__(self) -> str:
-        return f"TODO"
+        return f"{self.tweet_storage}"
 #def main():
 #    search_phrase = search_string()
 #    tweet_generator = _create_generator(search_phrase)
