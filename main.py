@@ -11,9 +11,9 @@ from web_scraper import WebScraper
 from data_process import DataProcess
 
 def main():
-   tweet_storage = WebScraper()
+   web_scraper = WebScraper()
    #print(tweet_storage)
-   polarity = DataProcess().get_polarity(tweet_storage)
+   polarity = DataProcess().get_polarity_df(web_scraper.tweet_storage)
    print(polarity)
 
 if __name__ == "__main__":

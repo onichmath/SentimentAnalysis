@@ -68,7 +68,6 @@ class WebScraper:
         return tweet_dict 
     
     # Dataframe was changed out for dict.
-    # Dataframe scraper will be made with different file likely
     #def _create_tweet_dataframe(self, tweet_generator):
     #    count = self._prompt_count()
     #    tweet_list = [] * count
