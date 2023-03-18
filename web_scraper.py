@@ -31,9 +31,9 @@ class WebScraper:
     def preprocess_tweets(self, p_flag):
         if self.tweets_processed == False:
             if p_flag == 'T':
-                self.tweet_storage.update((k,self.preprocessor.tokenize_preprocess(tweet)) for k,tweet in self.tweet_storage)
+                self.tweet_storage.update((k,self.preprocessor.tokenize_preprocess(tweet)) for k,tweet in self.tweet_storage.items())
             elif p_flag == 'V':
-                self.tweet_storage.update((k,self.preprocessor.vader_preprocess(tweet)) for k,tweet in self.tweet_storage)
+                self.tweet_storage.update((k,self.preprocessor.vader_preprocess(tweet)) for k,tweet in self.tweet_storage.items())
             self.tweets_processed = True
         else:
             raise
