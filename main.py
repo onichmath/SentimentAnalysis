@@ -13,7 +13,7 @@ from data_process import DataProcess
 def main():
    web_scraper = WebScraper()
    #print(tweet_storage)
-   polarity = DataProcess().get_polarity_df(web_scraper.tweet_storage)
+   polarity = DataProcess().get_polarity(web_scraper.tweet_storage)
    print(polarity)
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+from typing import List
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
@@ -23,14 +24,14 @@ class Preproccessor:
         return tweet_content
     
     # Specific preprocessing for Vader model, as vader does not require tokenizing/lcasing/etc
-    def vader_preprocess(self,tweet_content:str):
+    def vader_preprocess(self,tweet_content:str) -> str:
         tweet_content = re.sub(self._reg_hashtags_reg_website,'',tweet_content)
         tweet_content = re.sub(self._extra_whitespace,'',tweet_content)
         tweet_content = self._spell_check(tweet_content)
         return tweet_content
 
         # TODO: REMOVE @USERS
-    def tokenize_preprocess(self,tweet_content: str):
+    def tokenize_preprocess(self,tweet_content: str) -> list[str]:
         tweet_content = tweet_content.lower()
         tweet_content = re.sub(self._reg_hashtags_reg_website,'',tweet_content)
         tokens = self._regex_tokenizer.tokenize(tweet_content)

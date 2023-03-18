@@ -1,4 +1,5 @@
 # TODO: Remove Twitter libraries
+from typing import Dict, Literal
 import snscrape.modules.twitter as sn
 #import pandas as pd
 import datetime
@@ -9,6 +10,10 @@ from enum import Enum
 # With dict:    51322316259
 # With numpy: 
 # TODO: improve space complexity
+
+class ProcessingFlag(Enum):
+    VADERIZE = 'V'
+    TOKENIZE = 'T'
 
 class WebScraper:
     def __init__(self):
@@ -41,7 +46,7 @@ class WebScraper:
     def get_tweet_storage(self):
         return self.tweet_storage
 
-    def _create_search_string(self):
+    def _create_search_string(self) -> str:
         phrase = str(input("Phrase to search: "))
         start_date = input("Start year: ") +'-'+ input("Start month: ") +'-'+ input("Start day: ")
         #end_date = input("End year: ") +'-'+ input("End month: ") +'-'+ input("End day: ")
@@ -50,14 +55,14 @@ class WebScraper:
         #print(f"Your search phrase is \'{search_phrase}\'")
         return search_phrase
 
-    def _prompt_count(self):
+    def _prompt_count(self) -> int:
         return int(input("Tweets to store: "))
 
-    def _create_generator(self,search_phrase):
+    def _create_generator(self,search_phrase:str):
         return sn.TwitterSearchScraper(search_phrase).get_items() 
 
     # TODO: parallel/ improved time
-    def _create_tweet_dict(self,tweet_generator):
+    def _create_tweet_dict(self,tweet_generator) -> dict:
         count = self._prompt_count()
         tweet_dict = {}
         for i,tweet in enumerate(tweet_generator):
@@ -98,9 +103,6 @@ class WebScraper:
     def __str__(self) -> str:
         return f"{self.tweet_storage}"
 
-class ProcessingFlag(Enum):
-    VADERIZE = 'V'
-    TOKENIZE = 'T'
 
 #def main():
 #    search_phrase = search_string()
