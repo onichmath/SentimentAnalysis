@@ -8,11 +8,13 @@ With options for amount of data to scrape
 
 4. Display results, options for what to display"""
 from web_scraper import WebScraper
-import data_process as dp
+from data_process import DataProcess
 
 def main():
    tweet_storage = WebScraper()
-   print(tweet_storage)
+   #print(tweet_storage)
+   polarity = DataProcess().get_polarity(tweet_storage)
+   print(polarity)
 
 if __name__ == "__main__":
         main()
