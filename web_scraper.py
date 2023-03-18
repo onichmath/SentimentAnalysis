@@ -1,33 +1,40 @@
 # TODO: Remove Twitter libraries
 import snscrape.modules.twitter as sn
-import pandas as pd
+#import pandas as pd
 import datetime
 from preprocess import Preproccessor
+from enum import Enum
 # Before numpy: 55682971337
 # After:        53477174548
 # With dict:    51322316259
 # With numpy: 
 # TODO: improve space complexity
+
 class WebScraper:
-    def __init__(self, tweets_processed=False):
+    def __init__(self):
         self.search_string = self._create_search_string()
         self.tweet_generator = self._create_generator(self.search_string)
         self.preprocessor = Preproccessor()
         self.tweet_storage = self._create_tweet_dict(self.tweet_generator)
-        self.tweets_processed = tweets_processed
+        self.tweets_processed = False
+        self.prompt_preprocess()
 
-    # TODO: Custom exceptions for if already processed
-    def tokenize_tweets(self):
-        if self.tweets_processed == False:
-            for tweet in self.tweet_storage.values():
-                self.preprocessor.tokenize_preprocess(tweet)
+    def prompt_preprocess(self):
+        processing_type = input("Preprocessing type(t/v):  ").lower()
+        if processing_type == 't':
+            self.preprocess_tweets(ProcessingFlag.TOKENIZE.value)
+        elif processing_type == 'v':
+            self.preprocess_tweets(ProcessingFlag.VADERIZE.value)
         else:
             raise
-
-    def vaderize_tweet(self):
+    # TODO: Custom exceptions for if already processed
+    def preprocess_tweets(self, p_flag):
         if self.tweets_processed == False:
-            for tweet in self.tweet_storage.values():
-                self.preprocessor.vader_preprocess(tweet)
+            if p_flag == 'T':
+                self.tweet_storage.update((k,self.preprocessor.tokenize_preprocess(tweet)) for k,tweet in self.tweet_storage)
+            elif p_flag == 'V':
+                self.tweet_storage.update((k,self.preprocessor.vader_preprocess(tweet)) for k,tweet in self.tweet_storage)
+            self.tweets_processed = True
         else:
             raise
         
@@ -91,6 +98,11 @@ class WebScraper:
 
     def __str__(self) -> str:
         return f"{self.tweet_storage}"
+
+class ProcessingFlag(Enum):
+    VADERIZE = 'V'
+    TOKENIZE = 'T'
+
 #def main():
 #    search_phrase = search_string()
 #    tweet_generator = _create_generator(search_phrase)
