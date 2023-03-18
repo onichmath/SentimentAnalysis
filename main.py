@@ -11,10 +11,10 @@ from web_scraper import WebScraper
 from data_process import DataProcess
 
 def main():
-   web_scraper = WebScraper()
+   #web_scraper = WebScraper()
    #print(web_scraper.tweet_storage)
-   polarity = DataProcess().get_polarity(web_scraper.tweet_storage)
-   print(polarity)
+   polarity = DataProcess()
+   print(polarity.polarity_df)
 
 if __name__ == "__main__":
         main()
