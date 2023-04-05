@@ -24,6 +24,7 @@ class WebScraper:
         self.tweets_processed = False
         self.prompt_preprocess()
 
+    # TODO: error handling
     def prompt_preprocess(self):
         processing_type = input("Preprocessing type(t/v):  ").lower()
         if processing_type == 't':
@@ -54,7 +55,7 @@ class WebScraper:
                 start_day = int(input("Start day: "))
                 break
             except ValueError:
-                print("Must be an integer")
+                raise ValueError('Must be an integer')
         return f"{start_year}-{start_month}-{start_day}"
 
     def _create_search_string(self) -> str:
@@ -73,7 +74,7 @@ class WebScraper:
                 store_num = int(input("Tweets to store: "))
                 break
             except ValueError:
-                print("Must be an integer")
+                raise ValueError('Must be an integer')
         return store_num 
 
     def _create_generator(self,search_phrase:str):
