@@ -46,9 +46,21 @@ class WebScraper:
     def get_tweet_storage(self):
         return self.tweet_storage
 
+    def _prompt_start_date(self) -> str:
+        while True:
+            try:
+                start_year = int(input("Start year: "))
+                start_month = int(input("Start month: "))
+                start_day = int(input("Start day: "))
+                break
+            except ValueError:
+                print("Must be an integer")
+        return f"{start_year}-{start_month}-{start_day}"
+
     def _create_search_string(self) -> str:
         phrase = str(input("Phrase to search: "))
-        start_date = input("Start year: ") +'-'+ input("Start month: ") +'-'+ input("Start day: ")
+        #start_date = input("Start year: ") +'-'+ input("Start month: ") +'-'+ input("Start day: ")
+        start_date = self._prompt_start_date()
         #end_date = input("End year: ") +'-'+ input("End month: ") +'-'+ input("End day: ")
         end_date = f"{datetime.datetime.now():%Y-%m-%d}"
         search_phrase = f"{phrase} since:{start_date} until:{end_date}"
@@ -56,7 +68,13 @@ class WebScraper:
         return search_phrase
 
     def _prompt_count(self) -> int:
-        return int(input("Tweets to store: "))
+        while True:
+            try:
+                store_num = int(input("Tweets to store: "))
+                break
+            except ValueError:
+                print("Must be an integer")
+        return store_num 
 
     def _create_generator(self,search_phrase:str):
         return sn.TwitterSearchScraper(search_phrase).get_items() 
